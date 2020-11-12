@@ -49,15 +49,22 @@ def extract_mob_number(text):
 
 
 def extract_mail(email):
-    email2=loader.Email_Regex3
-    email_extract = re.findall(re.compile(email2), email)
-    #print(email_extract)
-    if email_extract: 
-        try:
-            #return email[0].split()[0].strip(';')
-            return email_extract[0]
-        except IndexError:
-            return None
+    #email2=loader.Email_Regex3
+    regex_list=[loader.Email_Regex,loader.Email_Regex2,loader.Email_Regex3]
+    for i in regex_list:
+        email_extract = re.findall(re.compile(i), email)
+        #print(email_extract)
+        if email_extract: 
+            try:
+                #return email[0].split()[0].strip(';')
+                return email_extract[0]
+            except IndexError:
+                return None
+        else:
+            continue
+        
+    
+    
    
 
 def iter_headings(paragraphs):
@@ -73,7 +80,8 @@ def extract_linkedinurl(text):
     
     
 
-def extract_skills(doch,aft=[],skills=[]):
+def extract_skills(doch,aft=[]):
+    skills=list()
     for heading,i in iter_headings(doch.paragraphs):
         if 'Skills' in heading.text :
             for j in range(i+1,len(doch.paragraphs)):
@@ -97,3 +105,12 @@ def txt_extraction(file):
     text = [line.replace('\t', ' ') for line in temp.split('\n') if line]
     full_t= ' '.join(text)
     return full_t
+
+def extract_static_skills(file):
+    conf=loader.load_conf()
+    skills_conf=conf['skills']
+    skills_count={i:0 for i in skills_conf}
+    
+    
+    
+    

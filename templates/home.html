@@ -1,0 +1,140 @@
+<style>
+.Resume {
+  position: relative;
+  left: -155px;
+  top:30px;
+  width: 180px;
+  border: 1px solid #73AD21;
+  padding: 2px;
+}
+
+.User_detail {
+  position: relative;
+  left: -155px;
+  top:30px;
+  width: 180px;
+  border: 1px solid #73AD21;
+  padding: 2px;
+  
+}
+
+.LinkedIn {
+  position: relative;
+  left: -155px;
+  top:40px;
+  width: 180px;
+  border: 1px solid #73AD21;
+  padding: 2px;
+  
+}
+
+.User_response {
+  position: relative;
+  right: -155px;
+  top:40px;
+  width: 180px;
+  border: 1px solid #73AD21;
+  padding: 2px;
+  
+}
+</style>
+
+<center>
+<div background-color=#ff9999 style="height:600px;width:550px;border:1px solid #ccc;font:16px/26px Georgia, Garamond, Serif;overflow:auto;">
+
+	<div class="Resume">
+		<p>Hi, Welcome to PrepTalk<br> new features demo.</p>
+	</div><br>
+	<div class="Resume">
+		<form action="/upload" method="post" enctype="multipart/form-data">
+			<p> Upload resume</p>
+			<input type="file" name="myfile">
+			<button type="submit">Upload</button>
+		</form>
+
+		
+	</div><br>
+	
+	<div class="User_detail">
+		<p>Email:</p>
+		<p>{{output}}</p>
+		<p>Name:{{Username}}</p>
+		
+    	{% if skills_list != None %}
+			<p>Your Top Skills are : {{skills_list}} </p>
+			<br>
+			<br>
+		<p>Please click Yes if the above results are correct</p>	
+    	<form action="/upload" method="post" >
+			<input type="submit" name="submitbutton" value="Yes" />
+			<input type="submit" name="submitbutton" value="No" />
+		</form>
+		{% endif %}
+		
+		{% if skills_list == None %}	
+		<p>Can you please enter the skill in the below text box </p>
+		<form action="/upload" method="post" >
+			<input type="text" name="Skills" ></input>
+			<input type="submit" name="submitbutton" value="Submit" />
+		</form>
+		<p>Submitted skills are:{{result}}</p>
+		{% endif %}
+    	
+		
+	</div>
+	
+	<div class="User_response">
+		<p>The captured details are correct</p>
+	</div>
+	
+		
+	<div class="LinkedIn">
+		<p>Based on your skills, we have fetched the roles that are suitable for you.</p>
+		<p>Please select the role:</p>
+		{% for role in Roles %}
+			<form action="/roless" method="post" >
+				<input type="submit" name="rol" placeholder="Role" value={{role}} >
+			</form>
+		{% endfor %}
+		
+	</div>
+	
+	<div class="User_response">
+		
+		<p>Selected role : {{Role}}</p>
+	</div>
+	
+	<div class="User_detail">
+	<p>Please select the Date and time</p>
+	{% for d in data %}
+		<form action="/slots" method="post" >
+				<input type="submit" name="slots" value={{d['Date']}},{{d['Time']}} />
+		</form>
+	{% endfor %}
+	
+	
+	</div>
+	
+	<div class="User_response">
+		<p>Selected {{Date1}}</p>
+	</div>
+
+	<div class="User_detail">
+		<p>We will schedule interview and send you the email</p>
+		
+	</div><br>
+	
+	<div class="User_detail">
+		<p>Thank you for applying. Invitation link<br> has been successfully sent to your mail</p>
+	</div>
+
+	<div class="User_response">
+		<p>Thank you</p>
+	</div>
+
+</div>
+
+</center>
+
+
+  

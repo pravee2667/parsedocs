@@ -1,6 +1,25 @@
 resume_dir: ../Data
-webdriver_dir: C://Users//P0142221//Downloads//chromedriver_win32
-
+webdriver_dir: C://Users//P0142221//Downloads//chromedriver_win32//chromedriver.exe
+pdf_dir: ..Data
 uname: praveen159sk@gmail.com
 pwd: Websites@27
 
+skills:
+    - java
+    - c
+    - c++
+    - c#
+    - .net
+    - matlab
+    - r
+    - python
+    - vhdl
+    - php
+    - javascript
+    - machine learning algorithms 
+    - tableau
+    - hadoop
+    - spark
+    - neural network
+    - deep learning
+      

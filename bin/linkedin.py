@@ -17,12 +17,12 @@ def skills_linkdn(url):
     #linkedin.com/in/avisek-sukul
     #'https://www.linkedin.com/in/praveensk-kumarsk227'
     
-    sleep(10)
+    sleep(6)
     xpat=driver.find_element_by_link_text("Sign in")
     
     xpat.click()
     
-    sleep(10)
+    sleep(6)
     
     uname=driver.find_element_by_name("session_key")
     uname.send_keys(conf['uname'])
@@ -36,13 +36,19 @@ def skills_linkdn(url):
         sign_in.click()
     except Exception as ex:
         logging.warn("Submit button does not exist")
-    sleep(8)
+        sign_in=driver.find_element_by_xpath('//button[contains(text(),"Sign in")]')
+        sign_in.click()
+    sleep(6)
     driver.maximize_window()
     sleep(2)
     driver.execute_script("window.scrollTo(0, 1780);")
     sleep(2)
-    showmore=driver.find_element_by_xpath('//section[contains(@class,"pv-profile-section pv-skill-categories-section")]/div[2]/button')
-    showmore.click()
+    try:
+        showmore=driver.find_element_by_xpath('//section[contains(@class,"pv-profile-section pv-skill-categories-section")]/div[2]/button')
+        showmore.click()
+    except Exception as ex:
+        showmore=driver.find_element_by_xpath('//button[@class="pv-profile-section__card-action-bar pv-skills-section__additional-skills artdeco-container-card-action-bar artdeco-button artdeco-button--tertiary artdeco-button--3 artdeco-button--fluid "]')
+        showmore.click()
     
     sleep(2)
     
@@ -53,12 +59,12 @@ def skills_linkdn(url):
     for row in rows:
         try:
             txtt=row.find_element_by_xpath('div/div/p/span')
-            skills.append(txtt)
+            skills.append(txtt.text)
         except Exception as ex:
             txtt=row.find_element_by_xpath('div/div/p/a/span')
-            skills.append(txtt)
+            skills.append(txtt.text)
             
-        print(txtt.text)
+    print(skills)
     driver.close()
     return skills
     

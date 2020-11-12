@@ -8,8 +8,14 @@ from docx.api import Document
 from bin import extractor as ex
 import logging
 from bin import linkedin
+from bin import pdf_extractor as pd
+from bin import loader
+from flask import Flask,request,session,render_template
+import os
+from outlook import meeting
+from werkzeug import secure_filename
+import json
 
-from flask import Flask,request,session,jsonify
 
 app=Flask(__name__)
 app.secret_key="sfsdfdsfdsf"
@@ -17,70 +23,202 @@ nlp = spacy.load('en_core_web_sm')
 
 matcher = Matcher(nlp.vocab)   
  
-@app.route('/home')
+@app.route('/')
 def home():
-    return "PrepTalk Hiring"
+    return render_template('home.html')
 
 @app.route('/upload',methods=['POST','GET'])
 def parse_doc():
     if request.method=='POST':
-        filename=request.files['img']
-        #print(filename)
-        txt=list()
-        logging.getLogger().setLevel(logging.INFO)
-        logging.info('File Name {}'.format(filename))
-        fileextens=filename.filename.split('.')[1]
-        print(fileextens)
-        if fileextens=='docx':
-            logging.info('File name ends with docx')
-            doc=Document(filename)
-            for para in doc.paragraphs:
-                txt.append(para.text)
-            full_t= ' '.join(txt)
-            name_e=ex.name_extraction(full_t)
-            session['name_session']=name_e
-            logging.info('Extracted Name {}'.format(name_e))
-            
-            mob=ex.extract_mob_number(full_t)
-            session['mob_session']=mob
-            logging.info('Extracted Mobile  {}'.format(mob))
-            
-            mail=ex.extract_mail(full_t)
-            session['mail_session']=mail
-            logging.info('Extracted mail {}'.format(mail))
-            print(session.get('mail_session'))
-            skills=ex.extract_skills(doc)
-            logging.info('Extracted Skills {}'.format(skills))
-            session['skills_session']=skills
-            
-            
-            if not mail or not name_e  or not mob  or not skills: 
+        if not request.form:
+            filename=request.files['myfile']
+            upload_dir=os.path.join(app.root_path,'Data','PDF')
+            print(upload_dir)
+            txt=list()
+            top_skills=None
+            logging.getLogger().setLevel(logging.INFO)
+            logging.info('File Name {}'.format(filename))
+            fileextens=filename.filename.split('.')[1]
+            logging.info('File Extension {}'.format(fileextens))
+            if filename.filename.endswith('docx'):
+                logging.info('File name ends with docx')
+                doc=Document(filename)
+                for para in doc.paragraphs:
+                    txt.append(para.text)
+                full_t= ' '.join(txt)
                 
-                txt_doc=ex.txt_extraction(filename)
-            if not mob:
-                mob_doc=ex.extract_mob_number(txt_doc)
-                print(mob_doc)
-            if not mail:
-                mail_doc=ex.extract_mail(txt_doc)
-                print(mail_doc)
-            if not name_e:
-                name_doc=ex.name_extraction(txt_doc)
-                print(name_doc)
-            if not skills:
+                name_e=ex.name_extraction(full_t)
+                name_dup=name_e 
+                logging.info('Extracted Name {}'.format(name_dup))
                 
-                url=ex.extract_linkedinurl(txt_doc)
-                skills=linkedin.skills_linkdn(url)
-                print(skills)
-        print("skills")    
-        return "Skills"
+                mob=ex.extract_mob_number(full_t)
+                mob_dup=mob
+                logging.info('Extracted Mobile  {}'.format(mob_dup))
+                
+                mail=ex.extract_mail(full_t)
+                mail_dup=mail 
+                logging.info('Extracted mail {}'.format(mail))
+                
+                skills=ex.extract_skills(doc)
+                logging.info('Extracted Skills {}'.format(skills))
+                skills_dup=skills
+                
+                try:
+                    top_skills=",".join(skills[0:3])
+                except Exception as exx:
+                    top_skills=None
+                
+                if not mail or not name_e  or not mob  or not skills: 
+                    txt_doc=ex.txt_extraction(filename)
+                    
+                if not mob:
+                    mob_doc=ex.extract_mob_number(txt_doc)
+                    
+                if not mail:
+                    mail=ex.extract_mail(txt_doc)
+                    
+                if not name_e:
+                    name_doc=ex.name_extraction(txt_doc)
+                    
+                if not skills:
+                    logging.info('Extracting Skills from text file {}'.format(name_e))
+                    url=ex.extract_linkedinurl(txt_doc)
+                    #url='https://www.linkedin.com/in/praveensk-kumarsk227'
+                    if url:
+                        skills=linkedin.skills_linkdn(url)
+                        if skills:
+                            top_skills=",".join(skills[0:3])
+                    else:
+                        skill_set=pd.pdf_extract_skills(txt_doc)
+                        top_skills=",".join([i for i in skill_set])
+                        skills_dup=top_skills
+#                session['name_session']=name_dup
+#                session['mob_session']=mob_dup
+                session['mail_session']=mail_dup
+                session['skills_session']=skills_dup
+                
+                return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)
+            elif fileextens=='pdf':
+                secure_file=secure_filename(filename.filename)
+                filename.save(os.path.join(upload_dir,secure_file))
+                files=upload_dir+'/'+secure_file
+                logging.info('PDF file {}'.format(files))
+                
+                pdftext=pd.pdf_txt(files)
+                pdftx="".join(pdftext)
+                name_e=ex.name_extraction(pdftx)
+                logging.info('Extracted Name {}'.format(name_e))
+                
+                mob=ex.extract_mob_number(pdftx)
+                #session['mob_session']=mob
+                logging.info('Extracted Mobile  {}'.format(mob))
+                
+                mail=ex.extract_mail(pdftx)
+                logging.info('Extracted mail {}'.format(mail))
+                mail_dup=mail
+                
+                skills=pd.pdf_extract_skills(pdftext)
+                logging.info('Extracted Skills {}'.format(skills))
+                skills_dup=skills
+                top_skil=[]
+                try:
+                    for i in skills:
+                        top_skil.append(i)
+                    top_skills=",".join(top_skil)
+                except Exception as exx:
+                    top_skills=None
+              
+                if not skills:
+                    
+                    url=ex.extract_linkedinurl(pdftx)
+                    if url:
+                        skills=linkedin.skills_linkdn(url)
+                        if skills:
+                            top_skills=",".join(skills[0:3])
+                    else:
+                        top_skills=None
+                session['mail_session']=mail_dup
+                session['skills_session']=skills_dup
+                return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)          
+        else:
+            if request.form['submitbutton']:
+                ski=session.get('skills_session')
+                logging.info('Extracted Roles {}'.format(ski))
+                if ski:
+                    roles=meeting.Get_roles(ski)
+                    logging.info('Extracted Roles {}'.format(roles.text))
+                    if roles:
+                        actual_roles=json.loads(roles.text)
+                        role1=actual_roles[0]
+                        print(role1)
+                        logging.info('Extracted Roless {}'.format(actual_roles))
+                    else:
+                        actual_roles=['DataScientist']
+                    
+                    return render_template('home.html',Roles=actual_roles)
+                else:
+                    ss=request.form['Skills']
+                
+                    skills_listt=ss.split(',')
+                    logging.info('Extracted Input Skills {}'.format(skills_listt))
+                    roles=meeting.Get_roles(skills_listt)
+                    logging.info('Extracted Roles {}'.format(roles.text))
+                    
+                    actual_roles=json.loads(roles.text)
+                    role1=actual_roles[0]
+                    print(role1)
+                    logging.info('Extracted Roless {}'.format(actual_roles))
+                    
+                    return render_template('home.html',Roles=actual_roles)
+                    
+            elif request.form['Roles']:
+                return "Success"
+            else:
+                return "Failed"
+            
      
-    return "File Not Uploaded"
+    return render_template('home.html')
+
+@app.route('/roless',methods=['POST','GET'])
+def free_slots():
+    if request.method=='POST':
+        role=request.form['rol']
+        print("Roles")
+        print(role)
+#        role_list=json.loads(role)
+#        print(role_list)
+        time_slot=meeting.Get_slots(role)
+        session['role']=role
+        time_slot_list=json.loads(time_slot)
+        slot_top=time_slot_list[0:3]
+        print(str(slot_top))
+        return  render_template('home.html',data=slot_top)
+    
+@app.route('/slots',methods=['POST','GET'])    
+def meeting_url():
+    if request.method=='POST':
+        slot=request.form['slots']
+        print(slot)
+        role=session['role']
+        date=slot.split(',')[0]
+        time=slot.split(',')[1]
+        meeting_req=meeting.Schedule_meet(role,date,time)
+        print(meeting_req)
+        meeting.Send_email(meeting_req,'praveen.sabhiniveeshu@pacteraedge.com')
+        return meeting_req
+        
+    
+    
+
 
 @app.route('/mail')            
 def mail_extract():
     mail=session.get('mail_session')
     print(mail)
     return "mail"
+
+
+
     
 #def execute(inp,txt=[]):
 #    logging.getLogger().setLevel(logging.INFO)
