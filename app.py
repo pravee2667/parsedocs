@@ -4,6 +4,7 @@ import spacy
 #import re
 #import sys
 from spacy.matcher import Matcher 
+
 from docx.api import Document
 from bin import extractor as ex
 import logging
@@ -13,7 +14,7 @@ from bin import loader
 from flask import Flask,request,session,render_template
 import os
 from outlook import meeting
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 import json
 
 
