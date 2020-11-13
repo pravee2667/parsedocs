@@ -20,7 +20,6 @@ def Send_email(invite_link,user_mail):
 
 def Get_roles(skills):
     url='https://preptalkoutlookcal.azurewebsites.net/Skills/'
-    print("Skills are {}".format(skills))
     U_Skills=["Python","Java"]
     data={
             "Skills":skills

@@ -62,10 +62,11 @@ def parse_doc():
                 
                 skills=ex.extract_skills(doc)
                 logging.info('Extracted Skills {}'.format(skills))
-                skills_dup=skills
+                
                 
                 try:
                     top_skills=",".join(skills[0:3])
+                    skills_dup=top_skills
                 except Exception as exx:
                     top_skills=None
                 
@@ -89,6 +90,7 @@ def parse_doc():
                         skills=linkedin.skills_linkdn(url)
                         if skills:
                             top_skills=",".join(skills[0:3])
+                            skills_dup=top_skills
                     else:
                         skill_set=pd.pdf_extract_skills(txt_doc)
                         top_skills=",".join([i for i in skill_set])
@@ -144,12 +146,13 @@ def parse_doc():
         else:
             if request.form['submitbutton']:
                 ski=session.get('skills_session')
-                logging.info('Extracted Roles {}'.format(ski))
+                logging.info('Extracted Skills {}'.format(ski))
                 if ski:
                     roles=meeting.Get_roles(ski)
-                    logging.info('Extracted Roles {}'.format(roles.text))
-                    if roles:
-                        actual_roles=json.loads(roles.text)
+                    logging.info('Extracted Roles {}'.format(roles))
+                    logging.info('Extracted Roles {}'.format(type(roles.text)))
+                    actual_roles=json.loads(roles.text)
+                    if actual_roles:
                         role1=actual_roles[0]
                         print(role1)
                         logging.info('Extracted Roless {}'.format(actual_roles))
