@@ -13,7 +13,7 @@ idna==2.10
 importlib-metadata==2.0.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
-logging==0.4.9.6
+
 lxml==4.6.1
 MarkupSafe==1.1.1
 mime==0.1.0
