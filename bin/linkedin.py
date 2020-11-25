@@ -12,8 +12,9 @@ def skills_linkdn(url):
     conf=loader.load_conf()
     options.add_argument("--headless")
     driver=webdriver.Chrome(conf['webdriver_dir'],chrome_options=options)
-    
+    #driver=webdriver.Chrome(conf['webdriver_dir'])
     driver.get(url)
+    #driver.get("https://www.linkedin.com/in/avisek-sukul")
     #linkedin.com/in/avisek-sukul
     #'https://www.linkedin.com/in/praveensk-kumarsk227'
     

@@ -62,11 +62,11 @@ def parse_doc():
                 
                 skills=ex.extract_skills(doc)
                 logging.info('Extracted Skills {}'.format(skills))
-                
+                #skills=[]
                 
                 try:
                     top_skills=",".join(skills[0:3])
-                    skills_dup=top_skills
+                    skills_dup=skills[0:3]
                 except Exception as exx:
                     top_skills=None
                 
@@ -81,7 +81,7 @@ def parse_doc():
                     
                 if not name_e:
                     name_doc=ex.name_extraction(txt_doc)
-                    
+                    name_e=name_doc
                 if not skills:
                     logging.info('Extracting Skills from text file {}'.format(name_e))
                     url=ex.extract_linkedinurl(txt_doc)
@@ -90,17 +90,28 @@ def parse_doc():
                         skills=linkedin.skills_linkdn(url)
                         if skills:
                             top_skills=",".join(skills[0:3])
-                            skills_dup=top_skills
+                            skills_dup=skills[0:3]
                     else:
                         skill_set=pd.pdf_extract_skills(txt_doc)
-                        top_skills=",".join([i for i in skill_set])
-                        skills_dup=top_skills
+                        skills_list=[]
+                        try:
+                            for i in skill_set:
+                                skills_list.append(i)
+                            top_skills=",".join(skills_list)
+                        except Exception as exx:
+                            top_skills=None
+                        print("top {}".format(top_skills))
+                        skills_dup=skills_list
 #                session['name_session']=name_dup
 #                session['mob_session']=mob_dup
                 session['mail_session']=mail_dup
                 session['skills_session']=skills_dup
+                logging.info('Extracted Skills {}'.format(skills_dup))
+                ret=list()
+                ret.append([name_e,mail_dup,skills_dup])
                 
-                return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)
+                return str(ret)
+                #return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)
             elif fileextens=='pdf':
                 secure_file=secure_filename(filename.filename)
                 filename.save(os.path.join(upload_dir,secure_file))
@@ -122,36 +133,40 @@ def parse_doc():
                 
                 skills=pd.pdf_extract_skills(pdftext)
                 logging.info('Extracted Skills {}'.format(skills))
-                skills_dup=skills
-                top_skil=[]
+                
+                skills_list=[]
                 try:
                     for i in skills:
-                        top_skil.append(i)
-                    top_skills=",".join(top_skil)
+                        skills_list.append(i)
+                    top_skills=",".join(skills_list)
                 except Exception as exx:
                     top_skills=None
-              
+                print("top {}".format(top_skills))
                 if not skills:
                     
                     url=ex.extract_linkedinurl(pdftx)
                     if url:
                         skills=linkedin.skills_linkdn(url)
+                        skills_list=skills
                         if skills:
                             top_skills=",".join(skills[0:3])
                     else:
                         top_skills=None
                 session['mail_session']=mail_dup
-                session['skills_session']=skills_dup
-                return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)          
+                session['skills_session']=skills_list
+                ret=list()
+                ret.append([name_e,mail_dup,skills_dup])
+                print(ret)
+                return str(ret)
+                #return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)          
         else:
             if request.form['submitbutton']:
                 ski=session.get('skills_session')
                 logging.info('Extracted Skills {}'.format(ski))
                 if ski:
                     roles=meeting.Get_roles(ski)
-                    logging.info('Extracted Roles {}'.format(roles))
-                    logging.info('Extracted Roles {}'.format(type(roles.text)))
                     actual_roles=json.loads(roles.text)
+                    logging.info('Extracted Roles {}'.format(actual_roles))
                     if actual_roles:
                         role1=actual_roles[0]
                         print(role1)
@@ -159,7 +174,8 @@ def parse_doc():
                     else:
                         actual_roles=['DataScientist']
                     
-                    return render_template('home.html',Roles=actual_roles)
+                    return str(actual_roles)
+                    #return render_template('home.html',Roles=actual_roles)
                 else:
                     ss=request.form['Skills']
                 
@@ -172,8 +188,8 @@ def parse_doc():
                     role1=actual_roles[0]
                     print(role1)
                     logging.info('Extracted Roless {}'.format(actual_roles))
-                    
-                    return render_template('home.html',Roles=actual_roles)
+                    return str(actual_roles)
+                    #return render_template('home.html',Roles=actual_roles)
                     
             elif request.form['Roles']:
                 return "Success"
@@ -196,7 +212,8 @@ def free_slots():
         time_slot_list=json.loads(time_slot)
         slot_top=time_slot_list[0:3]
         print(str(slot_top))
-        return  render_template('home.html',data=slot_top)
+        return str(slot_top)
+        #return  render_template('home.html',data=slot_top)
     
 @app.route('/slots',methods=['POST','GET'])    
 def meeting_url():

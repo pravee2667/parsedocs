@@ -1,0 +1,28 @@
+https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=A7C3293F0A3F3793&client_id=86q0y4z3t5fa90&redirect_uri=https://sampappl.azurewebsites.net/
+
+
+https://www.linkedin.com/oauth/v2/authorization?response_type=code&state=A7C3293F0A3F37W3&scope=r_liteprofile
+&client_id=86wzh8xzhz8zp5&redirect_uri=https://sampappl.azurewebsites.net/
+
+https://sampappl.azurewebsites.net/
+
+https://sampappl.azurewebsites.net/?code=AQQFM3VH2i_zVClBYmPiiMRehm2fsd_ryEK31Vf7Hi8bI_qkbMvJ4GxiuXOa7scx74i-7dfL71e7SLCHn3CEiBBVQCtt847Io18zt6ETL1hMJ5hOaTkfPZwM57Mz6hsQk_fDDJTF_tAChy6j_CU9SpE4iuh8nCS5Y3wTycQo0gpSHD7mTB5Lpl7Vf2YrOg&state=A7C3293F0A3F37W3
+
+https://sampappl.azurewebsites.net/?code=AQS3y93A-aDr1Gg4vAzIcxAdlGvWyAt_DxHbDGP8QQXwxdOU8uTRAxQCDPR_FKRHNcuKRVhmB8WbDHIs0qfEEkJTe-q5Q-CHfOOVvVZLbhQ2uySnV3eSGxWceBO6bYH31YcLH_5_nCjMy-V5zK6YaUIfxbCrb_TnaO8NSMPeA6EcQ6aiRUr8akBLTo37kw&state=A7C3293F0A3F37W3
+
+curl -ik -X POST https://www.linkedin.com/oauth/v2/accessToken -d grant_type=authorization_code -d code=AQQFM3VH2i_zVClBYmPiiMRehm2fsd_ryEK31Vf7Hi8bI_qkbMvJ4GxiuXOa7scx74i-7dfL71e7SLCHn3CEiBBVQCtt847Io18zt6ETL1hMJ5hOaTkfPZwM57Mz6hsQk_fDDJTF_tAChy6j_CU9SpE4iuh8nCS5Y3wTycQo0gpSHD7mTB5Lpl7Vf2YrOg -d redirect_uri=https://sampappl.azurewebsites.net/ -d client_id=86wzh8xzhz8zp5 -d client_secret=PI7IvVqMopyt3qCV
+
+curl https://api.linkedin.com/v2/jobs -H "Autorization:Bearer AQXPXYDO0IbBhSAl76aUwCMe1oslniKEvvhOSvcm1SosY0EuFFCh80pAz3I1wdHXTq5JfOH9hUW8iuC5deGzOfs8D3MY2IZR_s8c0w8Vt2ICPtoAH_ilrMHxrDfZxfFYUkwzZHCJH-YD4qDbn-msx8XAtScfWQsxQCYtcop0kYlJ2Ne--85Zm_agrTdd5_ZZ87nddpGDbjbyLk1nxaAcI42hchcm9r6GLmWz_U2ZrxgjX-DJH91o8zxrOfXiRcF2jh1EpXQSI7jvW7o4rVH5_Xw1rPRmFL2ZhLmtRCXdEA02PEA0ZCr5XZ1vpMLI8SEToRIOF-2bxD8p3MPk6TAm9xk4ZIANzg
+
+https://docs.microsoft.com/en-us/linkedin/shared/references/fields
+
+https://developer.linkedin.com/docs/fields/full-profile
+
+https://stackoverflow.com/questions/64619387/how-to-call-the-linkedin-api-using-python
+
+https://stackoverflow.com/questions/31508923/how-to-get-linkedin-r-fullprofile-access
+
+https://docs.microsoft.com/en-us/linkedin/shared/references/v2/profile/full-profile?context=linkedin/consumer/context
+
+https://business.linkedin.com/marketing-solutions/marketing-partners/become-a-partner/marketing-developer-program
+https://stackoverflow.com/questions/31508923/how-to-get-linkedin-r-fullprofile-access

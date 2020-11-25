@@ -3,6 +3,7 @@
 import requests
 import json
 import smtplib
+import logging
 
 def Send_email(invite_link,user_mail):
     body = 'Subject: Interview invitation from Pactera EDGE .\nDear ContactName, \n\n' + 'Please join the interview from the given link below at your selected time\n'+invite_link + '\n\n\n\n Thanks,\nSunil'
@@ -21,6 +22,13 @@ def Send_email(invite_link,user_mail):
 def Get_roles(skills):
     url='https://preptalkoutlookcal.azurewebsites.net/Skills/'
     U_Skills=["Python","Java"]
+    
+    rol=list()
+    for i in skills:
+        j=i.lstrip()
+        print(j)
+        rol.append(j)
+    logging.info('skills in get roles  {}'.format(rol))   
     data={
             "Skills":skills
          }
