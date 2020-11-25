@@ -23,10 +23,12 @@ app.secret_key="sfsdfdsfdsf"
 nlp = spacy.load('en_core_web_sm')
 
 matcher = Matcher(nlp.vocab)   
- 
+
+#Home Page 
 @app.route('/')
 def home():
     return render_template('home.html')
+
 #Upload files
 @app.route('/upload',methods=['POST','GET'])
 def parse_doc():
