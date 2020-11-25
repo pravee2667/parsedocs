@@ -27,7 +27,7 @@ matcher = Matcher(nlp.vocab)
 @app.route('/')
 def home():
     return render_template('home.html')
-
+#Upload files
 @app.route('/upload',methods=['POST','GET'])
 def parse_doc():
     if request.method=='POST':
