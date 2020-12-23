@@ -120,7 +120,7 @@ def parse_doc():
             ret_dict=dict()
             ret_dict['Name']=name_e.text
             ret_dict['Mail']=mail_dup
-            ret_dict['Skills']=skills_dup
+            ret_dict['Skills']=str(skills_dup)
             return str(ret_dict)
             #return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)
         elif fileextens=='pdf':
