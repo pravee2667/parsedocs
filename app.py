@@ -58,7 +58,7 @@ def parse_doc():
             
             name_e=ex.name_extraction(full_t)
             name_dup=name_e 
-            logging.info('Extracted Name {}'.format(name_dup))
+            logging.info('Extracted Name {}'.format(type(name_dup.text)))
             
             mob=ex.extract_mob_number(full_t)
             mob_dup=mob
@@ -118,7 +118,7 @@ def parse_doc():
             ret=list()
             ret.append([name_e,mail_dup,skills_dup])
             ret_dict=dict()
-            ret_dict['Name']=name_e
+            ret_dict['Name']=name_e.text
             ret_dict['Mail']=mail_dup
             ret_dict['Skills']=skills_dup
             return str(ret_dict)
@@ -169,7 +169,8 @@ def parse_doc():
             ret.append([name_e,mail_dup,skills_dup])
             print(ret)
             ret_dict=dict()
-            ret_dict['Name']=name_e
+            
+            ret_dict['Name']=name_e.text
             ret_dict['Mail']=mail_dup
             ret_dict['Skills']=skills_dup
             return str(ret_dict)
