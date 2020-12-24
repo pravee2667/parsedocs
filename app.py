@@ -39,6 +39,7 @@ def home():
 @app.route('/upload',methods=['POST','GET'])
 #@cross_origin()
 def parse_doc():
+    #document submitting
     if request.method=='POST':
         filename=request.files['myfile']
         upload_dir=os.path.join(app.root_path,'Data','PDF')
