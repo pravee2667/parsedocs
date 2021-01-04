@@ -121,6 +121,7 @@ def parse_doc():
             ret_dict['Name']=name_e.text
             ret_dict['Mail']=mail_dup
             ret_dict['Skills']=str(skills_dup)
+            print(str(ret_dict))
             return str(ret_dict)
             #return render_template('home.html',output=mail,Username=name_e,skills_list=top_skills)
         elif fileextens=='pdf':
@@ -199,7 +200,8 @@ def meeting_url():
     if request.method=='POST':
         slot=request.form['slots']
         print(slot)
-        role=session['role']
+        #role=session['role']
+        role='DataScientist'
         date=slot.split(',')[0]
         time=slot.split(',')[1]
         meeting_req=meeting.Schedule_meet(role,date,time)

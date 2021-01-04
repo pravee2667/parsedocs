@@ -52,7 +52,7 @@ def Schedule_meet(role,Date,Time):
         "Date": Date,
         "Time": Time
     }
-
+    print(data)
     meet = requests.post(url, json = data)
     return json.loads(meet.text)["joinUrl"]
 
